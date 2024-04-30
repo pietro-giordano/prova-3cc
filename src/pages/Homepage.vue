@@ -6,6 +6,7 @@ export default {
     data() {
         return {
             tasks: [],
+            successFlag: false,
         }
     },
     methods: {
@@ -16,6 +17,25 @@ export default {
                     console.log(response.data);
                     this.tasks = response.data.tasks;
                 })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+
+        deleteTask(id) {
+            axios
+                .delete('http://127.0.0.1:8000/api/tasks/' + id) 
+                .then(response => {
+                    console.log(response.data);
+                    console.log('Task ' + id + ' eliminato');
+                    this.successFlag = true;
+
+                    // richiamo index per aggiornare lista di tutti i tasks
+                    this.getTasks();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         }
     },
     created() {
@@ -30,6 +50,10 @@ export default {
         <router-link class="btn btn-primary my-3" :to="{ name: 'create' }">
             Create new task
         </router-link>
+
+        <div v-if="successFlag" class="alert alert-success">
+            Operazione avvenuta con successo
+        </div>
 
         <table class="table table-striped-columns">
             <thead>
@@ -55,9 +79,9 @@ export default {
                             Update
                         </router-link>
 
-                        <a class="btn btn-danger" href="#">
+                        <button class="btn btn-danger" @click="deleteTask(task.id)">
                             Delete
-                        </a>
+                        </button>
                     </td>
                 </tr>
             </tbody>

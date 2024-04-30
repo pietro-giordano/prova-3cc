@@ -6,6 +6,9 @@ export default {
     data() {
         return {
             task: [],
+            successFlag: false,
+            errorMessage: "",
+            errorFlag: false,
         }
     },
     methods: {
@@ -26,9 +29,14 @@ export default {
                 })
                 .then(response => {
                     console.log(response.data);
+                    this.successFlag = true;
+                    this.errorFlag = false;
                 })
                 .catch((error) => {
                     console.error(error);
+                    this.errorMessage = error.response.data.message;
+                    this.successFlag = false;
+                    this.errorFlag = true;
                 });
         }
     },
@@ -41,7 +49,15 @@ export default {
 <template>
     <div class="container mt-3">
 
-        <form>
+        <div v-if="successFlag" class="alert alert-success">
+            Operazione avvenuta con successo
+        </div>
+
+        <div v-if="errorFlag" class="alert alert-danger">
+            {{ errorMessage }}
+        </div>
+
+        <form @submit.prevent>
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" class="form-control" id="title" v-model="task.title">

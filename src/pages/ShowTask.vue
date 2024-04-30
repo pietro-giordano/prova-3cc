@@ -31,6 +31,10 @@ export default {
 
         <p>{{ task.description }}</p>
 
+        <router-link class="btn btn-primary mt-4" :to="{ name: 'homepage' }">
+            Back
+        </router-link>
+
     </div>
 </template>
 
